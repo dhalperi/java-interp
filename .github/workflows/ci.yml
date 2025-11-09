@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Bazel
+      uses: bazel-contrib/setup-bazel@0.9.0
+      with:
+        bazelisk-cache: true
+        disk-cache: ${{ github.workflow }}
+        repository-cache: true
+
+    - name: Build all targets
+      run: bazel build //...
+
+    - name: Run example - simple
+      run: bazel run //:cli -- example simple
+
+    - name: Run example - math
+      run: bazel run //:cli -- example math
+
+    - name: Run example - list
+      run: bazel run //:cli -- example list
+
+    - name: Run example - guava
+      run: bazel run //:cli -- example guava
+
+    - name: Run example - filter
+      run: bazel run //:cli -- example filter
+
+    - name: Run example - map
+      run: bazel run //:cli -- example map
