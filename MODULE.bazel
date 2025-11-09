@@ -1,0 +1,27 @@
+module(
+    name = "java_code_runner",
+    version = "0.1.0",
+)
+
+# Core Bazel dependencies
+bazel_dep(name = "rules_license", version = "1.0.0")
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
+bazel_dep(name = "rules_java", version = "8.16.1")
+bazel_dep(name = "bazel_features", version = "1.38.0", repo_name = "bazel_features")
+
+# Maven dependencies via rules_jvm_external
+bazel_dep(name = "rules_jvm_external", version = "6.9")
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    artifacts = [
+        "com.google.guava:guava:33.3.1-jre",
+        "com.google.code.findbugs:jsr305:3.0.2",
+    ],
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+    # Suppress warning about contributions from multiple modules
+    known_contributing_modules = ["java_code_runner", "protobuf"],
+)
+use_repo(maven, "maven")
