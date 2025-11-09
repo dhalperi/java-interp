@@ -1,0 +1,2 @@
+# Enable WORKSPACE for Bazel 8
+common --enable_workspace
